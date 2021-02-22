@@ -1,0 +1,27 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!,
+}
+
+type Message {
+  id: ID!
+  user: User!
+  content: String!
+}
+
+type Query {
+    users: [User!]!
+    user(id: ID!): User
+    chat: [Message!]!
+}
+
+type Subscription {
+  messageSent: Message
+}
+
+type Mutation {
+  createUser(name: String!, email: String!): User
+  deleteUser(id: ID!): User
+  sendMessage(userID: ID!, content: String!): Message
+}

@@ -1,0 +1,49 @@
+$cool-color: #489ce0;
+
+main {
+  margin: 20px;
+}
+
+.chat {
+  border-width: 1px;
+  border-style: solid;
+  border-color: darkcyan;
+  border-radius: 8px;
+  padding: 10px;
+
+  .messageList {
+    height: 80vh;
+    overflow: auto;
+  }
+
+  .message {
+    font-size: 14;
+    margin: 10px;
+
+    .user {
+      color: $cool-color;
+      font-weight: 700;
+    }
+
+    .content {
+      margin-left: 10px;
+    }
+  }
+
+  .messageSend {
+    display: flex;
+    flex-direction: row;
+
+    ion-input {
+      border-width: 1px;
+      border-style: solid;
+      border-radius: 8px;
+      border-color: $cool-color;
+    }
+
+    ion-button {
+      border-color: $cool-color;
+    }
+  }
+
+}

@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title> Chat </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <main>
+    <div class="chat">
+      <div class="messageList">
+        <div class="message" *ngFor="let msg of messageList">
+          <span *ngIf="msg.user" class="user">{{ msg.user.name }}</span>
+          <span class="content">{{ msg.content }}</span>
+        </div>
+      </div>
+      <form
+        class="messageSend" [formGroup]="messageForm" (ngSubmit)="sendMessage()" novalidate>
+        <ion-input placeholder="Mensagem" formControlName="content"></ion-input>
+        <ion-button type="submit" fill="clear">
+          <ion-icon name="paper-plane-sharp"></ion-icon>
+        </ion-button>
+      </form>
+    </div>
+  </main>
+</ion-content>
