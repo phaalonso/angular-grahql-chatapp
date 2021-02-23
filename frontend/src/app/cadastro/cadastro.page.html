@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>cadastro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main>
+    <form [formGroup]="form" (submit)="submit()">
+      <ion-item>
+        <ion-label position="floating">Nome</ion-label>
+        <ion-input formControlName="name"></ion-input>
+      </ion-item>
+      <div
+        class="errors"
+        *ngIf="form.get('name').dirty || form.get('name').touched"
+      >
+        <span *ngIf="form.get('name').errors?.required"> Insira o nome </span>
+      </div>
+
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+      <div
+        class="errors"
+        *ngIf="form.get('email').dirty || form.get('email').touched"
+      >
+        <span *ngIf="form.get('email').errors?.required"> Insira o email </span>
+        <span *ngIf="form.get('email').errors?.email"> Email inválido </span>
+      </div>
+
+      <ion-item>
+        <ion-label position="floating">Senha</ion-label>
+        <ion-input type="password" formControlName="senha"></ion-input>
+      </ion-item>
+      <div
+        class="errors"
+        *ngIf="form.get('senha').dirty || form.get('senha').touched"
+      >
+        <span *ngIf="form.get('senha').errors?.required"> Insira a senha </span>
+      </div>
+
+      <ion-button type="submit" expand="full">Cadastrar</ion-button>
+    </form>
+
+    <ion-button fill="clear" [routerLink]="['/login']"> Voltar </ion-button>
+  </main>
+</ion-content>

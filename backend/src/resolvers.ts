@@ -1,9 +1,14 @@
 import User from './schemas/Users';
 import Message from './schemas/Message';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { IResolvers, PubSub } from 'apollo-server';
 
 const pubsub = new PubSub();
 const CHAT_CHANNEL = 'CHAT_CHANNEL';
+
+dotenv.config();
 
 const resolvers: IResolvers =  {
 	Query: {
@@ -15,8 +20,32 @@ const resolvers: IResolvers =  {
 	},
 
 	Mutation: {
-		createUser: (_, { name, email }) => User.create({ name, email }),
+		createUser: async (_, { name, email, senha }) => {
+			const encryptedPassword = await bcrypt.hash(senha, 10);
+
+			return User.create({ 
+				name, 
+				email, 
+				senha: encryptedPassword 
+			});
+		},
 		deleteUser: (_, { id }) => User.remove(id),
+		login: async (_, { login }) => {
+			const { email, senha } = login;
+
+			const result = await User.findOne({ email });
+
+			
+			if (result && bcrypt.compare(senha, result.senha)) {
+				const token = jwt.sign({ id: result._id }, process.env.PRIVATE_KEY as string);
+
+				return {
+					id: result.id,
+					token
+				};
+			}
+			return null;
+		},
 		sendMessage: async (_, { userID, content }) => {
 			// Busca o usuário por id
 			const user = await User.findById(userID);

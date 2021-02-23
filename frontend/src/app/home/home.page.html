@@ -5,6 +5,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+   <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="logout()">
+      <ion-icon name="log-out-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
   <main>
     <div class="chat">
       <div class="messageList">

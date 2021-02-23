@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
+import {AutenticacaoService} from './autenticacao.service';
 
 export interface User {
   name: string;
   email: string;
+  senha?: string;
 }
 
 export interface Message {
+  id: string;
   content: string;
   user: User;
 }
@@ -15,14 +18,18 @@ export interface Message {
   providedIn: 'root',
 })
 export class GraphqlService {
-  constructor(private apollo: Apollo) {}
+  constructor(
+    private apollo: Apollo,
+    private auth: AutenticacaoService,
+  ) {}
 
-  public subscribeToMessages(cb) {
-    this.apollo
+  public subscribeToMessages() {
+    return this.apollo
       .watchQuery({
         query: gql`
           {
             chat {
+              id
               user {
                 name
               }
@@ -30,20 +37,22 @@ export class GraphqlService {
             }
           }
         `,
-        pollInterval: 1000
-      })
-      .valueChanges.subscribe(cb);
+        pollInterval:  300,
+        partialRefetch: true,
+      });
   }
 
-  public sendMessage(userID: string, content: string) {
+  public sendMessage(content: string) {
+    console.log(this.auth.getLoginData);
     const sendMessageMutation = gql`
       mutation {
-        sendMessage(userID: "${userID}", content: "${content}") {
+        sendMessage(userID: "${this.auth.getLoginData.id}", content: "${content}") {
+          id
+          content
           user {
             name
             email
           }
-          content
         }
       }
     `;
@@ -54,22 +63,19 @@ export class GraphqlService {
       this.apollo
         .mutate({
           mutation: sendMessageMutation,
-          variables: {
-            userID,
-            content,
-          },
         })
         .subscribe(
           ({ data }) => {
             const { sendMessage } = data as any;
-            const { content, user } = sendMessage;
+            const { id, content, user } = sendMessage;
 
             res({
+              id,
               content,
               user: {
                 name: user.name,
-                email: user.email
-              }
+                email: user.email,
+              },
             });
           },
           (err) => {
@@ -77,6 +83,20 @@ export class GraphqlService {
             reject(err);
           }
         );
+    });
+  }
+
+  public cadastrar(usuario: User) {
+    const cadastroMutation = gql`
+      mutation {
+        createUser(name: "${usuario.name}", email: "${usuario.email}", senha: "${usuario.senha}") {
+          id
+        }
+      }
+    `;
+
+    return this.apollo.mutate({
+      mutation: cadastroMutation,
     });
   }
 }

@@ -27,7 +27,7 @@ import {ReactiveFormsModule} from '@angular/forms';
         return {
           cache: new InMemoryCache(),
           link: httpLink.create({
-            uri: 'http://localhost:4000/'
+            uri: 'http://192.168.0.110:4000'
           })
         };
       },

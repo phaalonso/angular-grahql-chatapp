@@ -1,7 +1,9 @@
 type User {
   id: ID!
   name: String!
-  email: String!,
+  email: String!
+  senha: String!
+  token: String
 }
 
 type Message {
@@ -20,8 +22,14 @@ type Subscription {
   messageSent: Message
 }
 
+input LoginInput {
+  email: String!
+  senha: String!
+}
+
 type Mutation {
-  createUser(name: String!, email: String!): User
+  createUser(name: String!, email: String!, senha: String!): User
   deleteUser(id: ID!): User
   sendMessage(userID: ID!, content: String!): Message
+  login(login: LoginInput): User
 }
